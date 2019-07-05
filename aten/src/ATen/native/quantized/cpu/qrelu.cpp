@@ -1,5 +1,4 @@
 #include <ATen/ATen.h>
-#include <ATen/core/Type.h>
 #include <ATen/core/op_registration/op_registration.h>
 #include <ATen/native/TensorIterator.h>
 #include <ATen/native/cpu/Loops.h>
@@ -25,16 +24,16 @@ Tensor quantized_relu(Tensor qx) {
 }
 
 namespace {
-class QRelu final : public c10::OperatorKernel {
+class QRelu final : public torch::OperatorKernel {
  public:
   Tensor operator()(Tensor qx) {
     return at::relu(qx);
   }
 };
 
-static auto registry = c10::RegisterOperators().op(
+static auto registry = torch::RegisterOperators().op(
     "quantized::relu(Tensor qx) -> Tensor",
-    c10::RegisterOperators::options()
+    torch::RegisterOperators::options()
       .kernel<QRelu>(QuantizedCPUTensorId()));
 }  // namespace
 
